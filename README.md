@@ -81,7 +81,7 @@ To this end I created and trained the network architecture shown in fig. 4. Once
 <br />
 ![Basic model architecture.](/Images/basicArcitexture.png)
 
-*Fig. 3 - Custom VGG16 top-end for regression task*
+*Fig. 4 - Basic model architecture for regression task*
 <br />
 
 
