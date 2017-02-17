@@ -94,7 +94,7 @@ After all of training was complete. The models were verified against a separate 
 
 ### Result:
 
-The result of the pipeline discussed above is a convolutional neural network that is capable of navigating a car throughout the entire track smoothly and safely (please see video below).
+The result of the pipeline discussed above is a convolutional neural network that is capable of navigating a car throughout the entire track smoothly and safely (please see video below). In the end I decided to use the simple model over the VGG16 model because I appreciate it's relative simplicity and speed.
 
 [![Success video link](/Images/successVideoThumbnail.png?raw=true)](https://youtu.be/_oy2a1zdvNk "Behavioral cloning success!")
 
