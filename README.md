@@ -3,6 +3,13 @@
 ### Description:
 In this project I demonstrate the creation of a convolutional neural network that is capable of steering a vehicle around a track using only images from a center mounted dash cam. This project was part of the [Udacity Self-Driving Car Engineering Nanodegree program](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013).
 
+#### Code organization:
+- [model.py](./model.py): Defines and build the convolutional nueral networks.
+- [process.py](./process.py) : Performs preprocessing on the dash-cam images.
+- [data.py](./data.py): Manages the data for training, testing and verification.
+- [model.h5](./model.h5): The trained and saved keras model.
+- [drive.py](./drive.py): Responsible for communicating with the simulator and running dash-cam images through the network to produce the next steering angle.
+
 ### References:
 The following sources provided ideas and inspiration for this project:
 
@@ -18,7 +25,7 @@ The following sources provided ideas and inspiration for this project:
 #### 1) Gathering training data:
 Training data for this project was collected using a simulator provided by Udacity. The simulator is essentially a video game that allows the player to drive a car around a track and optionally record data along the way. The simulator includes 2 tracks that each feature a single lane road that winds it's way through various road surfaces, lane markers, bridges, landscapes and realistic distractions such as leaves and debris on the roadway. During recording, sample points are collected at a rate of 10 Hz. Each sample point consists of an image from each of the 3 virtual cameras attached to the car as well as information describing the cars instantaneous speed and steering angle. The virtual cameras are designed to mimic fender mounted cameras on the drivers and passengers side as well as a center mounted dash-cam. When a recording session is completed, a log file is produced in comma-separated format that includes columns for each instantaneous value as well as the three image file paths.
 
-A total of 18 different recording sessions were created and used to train the network. During the first few recordings, the car was driven down the center of the track as much as possible, similar to how a well behaved human would ideally drive the vehicle. However, it was observed that when the network which was trained with only these 'happy path' examples was put to the test and asked to steer the car autonomously, the car would rather quickly drift off center and eventually vere off the road. The reason for this is that the network has not seen any examples of what to do when the car has drifted off course and therefore is not capable of correcting the situation. To remedy this, several recording sessions were made with the intent of providing examples of course correction. The following strategies were used in various degrees:
+A total of 18 different recording sessions were created and used to train the network. During the first few recordings, the car was driven down the center of the track as much as possible, similar to how a well behaved human would ideally drive the vehicle. However, it was observed that when the network which was trained with only these 'happy path' examples was put to the test and asked to steer the car autonomously, the car would rather quickly drift off center and eventually veer off the road. The reason for this is that the network has not seen any examples of what to do when the car has drifted off course and therefore is not capable of correcting the situation. To remedy this, several recording sessions were made with the intent of providing examples of course correction. The following strategies were used in various degrees:
 
 - Gently swerve from one side of the road to the other while staying within the bounds of the lane. 
 - Intentionally put the car in an unwanted situation with recording mode turned off and then toggle it on as the car corrects the situation by steering back to center. 
@@ -83,6 +90,8 @@ To this end I created and trained the network architecture shown in fig. 4. Once
 
 *Fig. 4 - Basic model architecture for regression task*
 <br />
+
+After all of training was complete. The models were verified against a separate dataset that was collected for this purpose. This dataset was not included in the training steps so that it would serve as a good measure of the networks ability to generalize. The verification step was able to ahieve a loss of less that 0.02 which is very good.
 
 
 ### Result:
