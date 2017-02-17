@@ -23,13 +23,13 @@ The following sources provided ideas and inspiration for this project:
 ### Pipeline:
 
 #### 1) Gathering training data:
-Training data for this project was collected using a simulator provided by Udacity. The simulator is essentially a video game that allows the player to drive a car around a track and optionally record data along the way. The simulator includes 2 tracks that each feature a single lane road that winds it's way through various road surfaces, lane markers, bridges, landscapes and realistic distractions such as leaves and debris on the roadway. During recording, sample points are collected at a rate of 10 Hz. Each sample point consists of an image from each of the 3 virtual cameras attached to the car as well as information describing the cars instantaneous speed and steering angle. The virtual cameras are designed to mimic fender mounted cameras on the drivers and passengers side as well as a center mounted dash-cam. When a recording session is completed, a log file is produced in comma-separated format that includes columns for each instantaneous value as well as the three image file paths.
+Training data for this project was collected using a simulator provided by Udacity. The simulator is essentially a video game that allows the player to drive a car around a track and optionally record data along the way. The simulator includes 2 tracks that each feature a single lane road that winds it's way through various road surfaces, lane markers, bridges, landscapes and realistic distractions such as leaves and debris on the roadway. During recording, sample points are collected at a rate of 10 Hz. Each sample point consists of an image from each of the 3 virtual cameras attached to the car as well as information describing the cars instantaneous speed and steering angle. The virtual cameras are designed to mimic fender mounted cameras on the drivers and passengers side as well as a center mounted dash-cam. When a recording session is completed, a log file is produced in comma-separated format that includes columns for each instantaneous value as well as each of the three image file paths.
 
 A total of 18 different recording sessions were created and used to train the network. During the first few recordings, the car was driven down the center of the track as much as possible, similar to how a well behaved human would ideally drive the vehicle. However, it was observed that when the network which was trained with only these 'happy path' examples was put to the test and asked to steer the car autonomously, the car would rather quickly drift off center and eventually veer off the road. The reason for this is that the network has not seen any examples of what to do when the car has drifted off course and therefore is not capable of correcting the situation. To remedy this, several recording sessions were made with the intent of providing examples of course correction. The following strategies were used in various degrees:
 
-- Gently swerve from one side of the road to the other while staying within the bounds of the lane. 
-- Intentionally put the car in an unwanted situation with recording mode turned off and then toggle it on as the car corrects the situation by steering back to center. 
-- Drive the track backwards to help balance out the number of left turns and right turns.  
+- Gently swerving from one side of the road to the other while staying within the bounds of the lane. 
+- Intentionally positioning the car in an undesirable situation with recording mode turned off and then toggling it on as the car corrects the situation by steering back to center. 
+- Driving the entire track backwards to help balance out the number of left turns and right turns.  
  
 When all of these training sets were put together, the result was a network that was able to safely navigate the car through the entire track.
 
@@ -45,7 +45,7 @@ To help increase the signal to noise ratio of the training images I decided to c
 <br />
 ![Results of the preprocess step](/Images/preprocess.png)
 
-*Fig. 1 - left: An unaltered image from a recording session. right: The same image after going throught the preprocessed step*
+*Fig. 1 - left: An unaltered image from a recording session. right: The same image after going throught the preprocessing step*
 <br />
 <br />
 
@@ -57,7 +57,7 @@ The second is based on a pre-trained version of the popular VGG16 architecture (
 
 <br />
 
-##### VGG16:
+##### - VGG16:
 
 [![VGG16 CNN architecture](https://www.cs.toronto.edu/~frossard/post/vgg16/vgg16.png)](https://www.cs.toronto.edu/~frossard/post/vgg16/)
 
@@ -65,7 +65,7 @@ The second is based on a pre-trained version of the popular VGG16 architecture (
 
 <br />
 
-The VGG16 model has been previously trained on the [ImageNet](http://www.image-net.org) dataset which contains images sized to 224x224x3. However, as discussed above, the input images for this project are sized at 80x80x3 and because of this it was required that we exclude the fully connected layers when importing the pre-trained model. After this step we are left with the 5 fully trained convolutional blocks that act as a base to build a custom regression model on top of. I experimented with several configurations for the new top end but in the end I found good results from a relatively small set of fully connected layers with max-pooling and ReLU activations (See Fig. 3 below). 
+The VGG16 model has been previously trained on the [ImageNet](http://www.image-net.org) dataset which contains images sized to 224x224x3. However, as discussed above, the input images for this project are sized at 80x80x3 and because of this it was required that we exclude the fully connected layers when importing the pre-trained model. After this step we are left with the 5 fully trained convolutional blocks that act as a base to build a custom regression model. I experimented with several configurations for the new top end but in the end I found good results from a relatively small number of wide fully connected layers with max-pooling and ReLU activations (See Fig. 3 below). 
 
 <br />
 ![Custom VGG16 top-end for regression task.](/Images/vgg16Regression.png)
@@ -76,9 +76,7 @@ The VGG16 model has been previously trained on the [ImageNet](http://www.image-n
 I trained this model with an Adam optimizer with learning rates ranging from 1e-5 to 1e-2 and found that the sheer size of the model made it very easy to overfit the relatively small training set, even when training for a single epoch. To alleviate this issue, I introduced 2 dropout layers with keep-probabilities of 0.5 and found that this architecture combined with a learning rate of 1e-3 produced decent results.  
 
 <br />
-##### Basic:
-
-#### model pic here!
+##### - BASIC:
 
 After playing with the VGG16 model discussed above, I started to wonder if a smaller model architecture would be able to produce similar results. A smaller model would be beneficial in several ways including a somewhat lesser tendency to overfit the limited training data, increased training speed and most importantly increased prediction speed. If the network was to be used in a real vehicle (as opposed to a simulator) then the speed at which the network is able to predict the next steering angle would be critically important. A pipeline that takes too long could be a show stopper. 
  
@@ -91,7 +89,7 @@ To this end I created and trained the network architecture shown in fig. 4. Once
 *Fig. 4 - Basic model architecture for regression task*
 <br />
 
-After all of training was complete. The models were verified against a separate dataset that was collected for this purpose. This dataset was not included in the training steps so that it would serve as a good measure of the networks ability to generalize. The verification step was able to ahieve a loss of less that 0.02 which is very good.
+After all of training was complete. The models were verified against a separate dataset that was collected for this purpose. This dataset was not included in the training steps so that it would serve as a good measure of the networks ability to generalize. The verification step was able to ahieve a loss of well under 0.1 which is very good.
 
 
 ### Result:

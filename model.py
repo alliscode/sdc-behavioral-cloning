@@ -29,7 +29,7 @@ import os.path
 import numpy as np
 from enum import Enum
 from keras.models import Sequential
-from keras.layers import Input, Dense, Activation, Flatten, Dropout
+from keras.layers import Input, Dense, Activation, Flatten, Dropout, BatchNormalization
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.applications.vgg16 import VGG16
 from keras.models import Model, load_model
@@ -173,6 +173,7 @@ class Driver:
         model = Activation('relu')(model)
         model = Dropout(0.5)(model)
         model = Dense((750))(model)
+        model = BatchNormalization()(model)
         model = Activation('relu')(model)
         model = Dense(1)(model)
         model = Activation('linear')(model)
@@ -220,6 +221,20 @@ class Driver:
         Returns (float) The predicted steering angle.
         """
         return float(self.model.predict(image, batch_size=1))
+    
+    #predict_generator(self, generator, val_samples, max_q_size=10, nb_worker=1, pickle_safe=False)
+    def predictGen(self, generator, num_samples):
+        """Uses the already trained model to predict the appropriate steering angles for a batch of input 
+        images produced by a generator.
+        
+        Args:
+            generator: The generator that produced the input images
+            dnum_samples: The number of examples to predict.
+            
+        Returns (float) The predicted steering angle.
+        """
+        
+        return self.model.predict_generator(generator, num_samples)
     
     def save(self, file):
         """Saves the trained model to disk.
