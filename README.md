@@ -43,6 +43,7 @@ The thing that I found to be the most critical to the performance of the network
 To help increase the signal to noise ratio of the training images I decided to crop off the top 40%. This effectively removes the section of image above the horizon while retaining nearly all of the useful information from the track, walls and lane lines. This step alone led to a great improvement in driving style. After cropping, the images were resized to 80x80 pixels and normalized to a range of [-0.5, 0.5].
 
 <br />
+
 ![Results of the preprocess step](/Images/preprocess.png)
 
 *Fig. 1 - left: An unaltered image from a recording session. right: The same image after going throught the preprocessing step*
@@ -76,6 +77,7 @@ The VGG16 model has been previously trained on the [ImageNet](http://www.image-n
 I trained this model with an Adam optimizer with learning rates ranging from 1e-5 to 1e-2 and found that the sheer size of the model made it very easy to overfit the relatively small training set, even when training for a single epoch. To alleviate this issue, I introduced 2 dropout layers with keep-probabilities of 0.5 and found that this architecture combined with a learning rate of 1e-3 produced decent results.  
 
 <br />
+
 ##### - BASIC:
 
 After playing with the VGG16 model discussed above, I started to wonder if a smaller model architecture would be able to produce similar results. A smaller model would be beneficial in several ways including a somewhat lesser tendency to overfit the limited training data, increased training speed and most importantly increased prediction speed. If the network was to be used in a real vehicle (as opposed to a simulator) then the speed at which the network is able to predict the next steering angle would be critically important. A pipeline that takes too long could be a show stopper. 
