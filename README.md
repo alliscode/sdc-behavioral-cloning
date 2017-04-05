@@ -69,9 +69,11 @@ The second is based on a pre-trained version of the popular VGG16 architecture (
 The VGG16 model has been previously trained on the [ImageNet](http://www.image-net.org) dataset which contains images sized to 224x224x3. However, as discussed above, the input images for this project are sized at 80x80x3 and because of this it was required that we exclude the fully connected layers when importing the pre-trained model. After this step we are left with the 5 fully trained convolutional blocks that act as a base to build a custom regression model. I experimented with several configurations for the new top end but in the end I found good results from a relatively small number of wide fully connected layers with max-pooling and ReLU activations (See Fig. 3 below). 
 
 <br />
+
 ![Custom VGG16 top-end for regression task.](/Images/vgg16Regression.png)
 
 *Fig. 3 - Custom VGG16 top-end for regression task*
+
 <br />
 
 I trained this model with an Adam optimizer with learning rates ranging from 1e-5 to 1e-2 and found that the sheer size of the model made it very easy to overfit the relatively small training set, even when training for a single epoch. To alleviate this issue, I introduced 2 dropout layers with keep-probabilities of 0.5 and found that this architecture combined with a learning rate of 1e-3 produced decent results.  
@@ -86,9 +88,11 @@ To this end I created and trained the network architecture shown in fig. 4. Once
  
 
 <br />
+
 ![Basic model architecture.](/Images/basicArcitexture.png)
 
 *Fig. 4 - Basic model architecture for regression task*
+
 <br />
 
 After all of training was complete. The models were verified against a separate dataset that was collected for this purpose. This dataset was not included in the training steps so that it would serve as a good measure of the networks ability to generalize. The verification step was able to ahieve a loss of well under 0.1 which is very good.
